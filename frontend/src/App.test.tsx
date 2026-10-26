@@ -11,10 +11,11 @@ describe('App', () => {
   it('shows a successful API connection', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({ status: 'ok', service: 'buildlog-api' }),
-      }),
+      vi.fn((input: RequestInfo | URL) =>
+        String(input).endsWith('/health')
+          ? Promise.resolve({ ok: true, json: async () => ({ status: 'ok', service: 'buildlog-api' }) })
+          : Promise.resolve({ ok: false, json: async () => ({ detail: '로그인이 필요합니다.' }) }),
+      ),
     )
 
     render(<App />)

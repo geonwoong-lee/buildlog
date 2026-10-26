@@ -53,10 +53,9 @@ PowerShell에서는 실행 정책 때문에 `npm`이 `npm.ps1`로 실행되지 �
 
 ## 6. 아직 수행하지 않은 작업
 
-- SQLite 파일 생성
 - 실제 값을 넣은 `.env` 생성
 - Supabase 프로젝트 생성 및 연결
-- Git 초기화와 커밋
+- Supabase PostgreSQL 연결
 
 위 작업들은 계획한 Phase에 맞춰 하나씩 진행합니다.
 
@@ -113,15 +112,40 @@ cd backend
 {"status":"ok","service":"buildlog-api"}
 ```
 
-## 9. Phase 1 확인 결과
+## 9. 데이터베이스 마이그레이션
+
+백엔드 가상환경을 만든 뒤 다음 명령으로 SQLite 3에 마이그레이션을 적용합니다.
+
+```powershell
+cd backend
+.\.venv\Scripts\alembic.exe -c alembic.ini upgrade head
+```
+
+현재 Phase 2에서는 `database/buildlog_dev.sqlite3`에 `users` 테이블과 Alembic 버전 정보가 생성됩니다. 이 파일은 Git에 저장하지 않습니다.
+
+## 10. Phase 3 회원 기능 실행 준비
+
+로그인 토큰을 만들려면 루트 `.env.example`을 참고해 루트에 `.env`를 만들고 `AUTH_SECRET_KEY`에 충분히 긴 임의 값을 넣습니다. `.env`는 Git에서 제외됩니다.
+
+```powershell
+Copy-Item .env.example .env
+```
+
+복사한 뒤 `AUTH_SECRET_KEY` 값을 실제 로컬 비밀값으로 바꿉니다. 이 값은 채팅이나 문서에 적지 않습니다.
+
+## 11. Phase 확인 결과
 
 확인일: 2026-10-26
 
-- 백엔드 테스트: 1개 통과
+- Phase 1 백엔드 테스트: 1개 통과
 - 프론트엔드 테스트: 1개 통과
 - 프론트엔드 코드 검사: 통과
 - 프론트엔드 운영 빌드: 통과
 - FastAPI `/health`: HTTP 200
 - React 기본 페이지: HTTP 200
 - 허용된 React 주소의 CORS 응답: 정상
-- SQLite 파일과 Supabase 연결: 아직 생성하지 않음
+- Phase 2 SQLite 마이그레이션: `users` 테이블 생성 확인
+- Phase 2·3 백엔드 테스트: 4개 통과
+- Phase 3 회원가입·로그인·닉네임 변경 API: 테스트 통과
+- Phase 3 React 회원가입·로그인·닉네임 화면: 테스트·lint·빌드 통과
+- Supabase 연결: 아직 하지 않음
