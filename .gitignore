@@ -1,0 +1,24 @@
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and virtual environments
+.venv/
+node_modules/
+
+# Build and Python-generated output
+dist/
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+.vite/
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs
+*.log
