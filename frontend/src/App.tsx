@@ -45,7 +45,8 @@ function App() {
     event.preventDefault()
     setAuthMessage('')
     setAuthError('')
-    const form = new FormData(event.currentTarget)
+    const formElement = event.currentTarget
+    const form = new FormData(formElement)
     const email = String(form.get('email') ?? '')
     const password = String(form.get('password') ?? '')
 
@@ -56,12 +57,12 @@ function App() {
           password,
           nickname: String(form.get('nickname') ?? ''),
         })
-        event.currentTarget.reset()
+        formElement.reset()
         setAuthMode('login')
         setAuthMessage('회원가입이 완료되었습니다. 로그인해 주세요.')
       } else {
         setUser(await login({ email, password }))
-        event.currentTarget.reset()
+        formElement.reset()
         setAuthMessage('로그인되었습니다.')
       }
     } catch (error) {
